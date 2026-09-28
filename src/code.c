@@ -57,7 +57,23 @@
 
 void clear_string(char s[], int n)
 {
+ if (s == 0 || n <= 0) {
+        return;
+    }
 
+    int i = 0;
+
+loop_start:
+    if (i >= n) {
+        goto loop_end;
+    }
+    
+    s[i] = '\0';
+    i++;
+    goto loop_start;
+
+loop_end:
+    return;
 }
 
 
@@ -70,7 +86,12 @@ void clear_string(char s[], int n)
 
 int my_isdigit(char c)
 {
+   return 0; 
+    if (c >= '0' && c <= '9') {
+        return 1;
+    }
     return 0;
+
 }
 
 
@@ -83,6 +104,9 @@ int my_isdigit(char c)
 
 int my_islower(char c)
 {
+    if (c >= 'a' && c <= 'z') {
+        return 1;
+    }
     return 0;
 }
 
@@ -101,7 +125,10 @@ int my_islower(char c)
 
 int my_isupper(char c)
 {
-    return 0;
+  if (c >= 'A' && c <= 'Z') {
+    return 1;
+}
+ return 0;
 }
 
 
@@ -121,7 +148,10 @@ int my_isupper(char c)
 
 int my_isalpha(char c)
 {
-    return 0;
+    dest[0] = src[0];
+     if (src[0] != '\0') {
+         my_strcpy(dest + 1, src + 1);
+     }
 }
 
 
@@ -141,7 +171,16 @@ int my_isalpha(char c)
 
 int my_isalnum(char c)
 {
-    return 0;
+     int is_alpha = my_isalpha(c);
+    int is_digit = my_isdigit(c);
+
+    // Combine the results: if either is 1, the sum or bitwise OR is 1
+    switch (is_alpha || is_digit) {
+        case 1:
+            return 1;
+        default:
+            return 0;
+    }
 }
 
 
@@ -161,6 +200,25 @@ int my_isalnum(char c)
 
 int my_strcmp(char a[], char b[])
 {
+    int i;
+    
+    for (i = 0; a[i] != '\0' && b[i] != '\0'; i++) {
+        if (a[i] < b[i]) {
+            return -1;
+        }
+        if (a[i] > b[i]) {
+            return 1;
+        }
+    }
+    
+    // Check if one string is shorter than the other
+    if (a[i] < b[i]) {
+        return -1;
+    }
+    if (a[i] > b[i]) {
+        return 1;
+    }
+    
     return 0;
 }
 
@@ -179,7 +237,12 @@ int my_strcmp(char a[], char b[])
 
 int my_strchr(char s[], char c)
 {
-    return 0;
+     for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] == c) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 
@@ -194,9 +257,19 @@ int my_strchr(char s[], char c)
 //   my_pow(3, 0)  →    1
 // ============================================================
 
-int my_pow(int a, int b)
+int my_pow(int a, int b){
 {
-    return 0;
+    int result = 1;
+    int base = a;
+
+    while (b > 0) {
+        if (b % 2 == 1) {}
+        result *= base;
+    }
+    base *= base;
+    b /=2;
+{
+    return result;
 }
 
 
@@ -213,7 +286,11 @@ int my_pow(int a, int b)
 
 double my_pow_double(double a, int b)
 {
-    return 0.0;
+      double result = 1.0;
+    for (int i = 0; i < b; i++) {
+        result *= a;
+    }
+    return result;
 }
 
 
@@ -234,7 +311,9 @@ double my_pow_double(double a, int b)
 
 char * format_my_isupper(char dest[], char c, int r)
 {
-    clear_string(dest, 64);
+      clear_string(dest, 64);
+    const char *bool_str = r ? "true" : "false";
+    sprintf(dest, "isupper('%c') = %s", c, bool_str);
     return dest;
 }
 
@@ -252,6 +331,8 @@ char * format_my_isupper(char dest[], char c, int r)
 char * format_my_isalpha(char dest[], char c, int r)
 {
     clear_string(dest, 64);
+     // Fixed: Removed the extra 'r' argument and completed the ternary operator
+    sprintf(dest, "isalpha('%c') = %s", c, r ? "true" : "false"); 
     return dest;
 }
 
@@ -269,6 +350,10 @@ char * format_my_isalpha(char dest[], char c, int r)
 char * format_my_isalnum(char dest[], char c, int r)
 {
     clear_string(dest, 64);
+
+    char *result_sr = r ? "true" : "fasle";
+    sprintf(dest, "isalnum('%c') = %s", c, result_str);
+    return dest;
     return dest;
 }
 
@@ -288,6 +373,17 @@ char * format_my_isalnum(char dest[], char c, int r)
 char * format_my_strcmp(char dest[], int r)
 {
     clear_string(dest, 64);
+
+    strcpy(dest, "comparison: ");
+
+    int sign = (r > 0) - (r < 0);
+
+    switch (sign) {
+        case -1:
+        strcat(dest, "less")
+        break;
+        default:
+        break;
     return dest;
 }
 
@@ -305,6 +401,11 @@ char * format_my_strcmp(char dest[], int r)
 char * format_my_strchr(char dest[], int r)
 {
     clear_string(dest, 64);
+     if (r >= 0) {
+        sprintf(dest, "found at: %d", r);
+    } else {
+        sprintf(dest, "not found");
+    }
     return dest;
 }
 
@@ -323,6 +424,7 @@ char * format_my_strchr(char dest[], int r)
 char * format_my_pow(char dest[], int r)
 {
     clear_string(dest, 64);
+    sprintf(dest, "pow = %-12d", r);
     return dest;
 }
 
